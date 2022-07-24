@@ -9,6 +9,7 @@ public:
 	TableEntry(EntryData* data, int freq);
 	TableEntry(EntryData* data);
 	TableEntry(const TableEntry& obj);
+	TableEntry(TableEntry&& obj) noexcept;
 	virtual ~TableEntry();
 
 	virtual std::string GetResultString();

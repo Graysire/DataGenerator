@@ -24,6 +24,12 @@ Item::Item(const Item& obj) : EntryData(obj), value(obj.value), weight(obj.weigh
 {
 }
 
+Item::Item(Item&& obj) : EntryData(std::move(obj)), value(obj.value), weight(obj.weight)
+{
+	obj.value = 0;
+	obj.weight = 0;
+}
+
 std::string Item::GetResultString(unsigned int quantity)
 {
 	return EntryData::GetResultString(quantity);

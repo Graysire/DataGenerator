@@ -12,7 +12,9 @@ VariableTableEntry::VariableTableEntry(EntryData* data, Dice dice, int freq) : T
 VariableTableEntry::VariableTableEntry(const VariableTableEntry& obj) : TableEntry(obj), dice(obj.dice)
 {
 }
-
+VariableTableEntry::VariableTableEntry(VariableTableEntry&& obj) noexcept : TableEntry(std::move(obj)), dice(std::move(dice))
+{
+}
 VariableTableEntry::~VariableTableEntry()
 {
 }

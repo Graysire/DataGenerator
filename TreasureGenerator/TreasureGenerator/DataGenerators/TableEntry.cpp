@@ -12,6 +12,12 @@ TableEntry::TableEntry(const TableEntry& obj) : TableEntry(obj.data, obj.frequen
 {
 }
 
+TableEntry::TableEntry(TableEntry&& obj) noexcept : TableEntry(obj.data, obj.frequency)
+{ 
+	obj.data = nullptr;
+	obj.frequency = 0;
+}
+
 TableEntry::~TableEntry()
 {
 	delete data;

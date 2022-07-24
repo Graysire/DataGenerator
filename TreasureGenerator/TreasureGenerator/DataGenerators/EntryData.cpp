@@ -16,6 +16,12 @@ EntryData::EntryData(const EntryData& obj) : EntryData(obj.name, obj.quantity)
 {
 }
 
+EntryData::EntryData(EntryData&& obj) noexcept : EntryData(obj.name, obj.quantity)
+{
+	obj.name = "";
+	obj.quantity = 0;
+}
+
 std::string EntryData::GetResultString(unsigned int quantity)
 {
 	this->quantity = quantity;

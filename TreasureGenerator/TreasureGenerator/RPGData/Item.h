@@ -10,6 +10,7 @@ public:
 	Item(std::string name, unsigned long value, unsigned long weight);
 	Item(std::string name, unsigned int quantity, unsigned long value, unsigned long weight);
 	Item(const Item& obj);
+	Item(Item&& obj) noexcept;
 
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();

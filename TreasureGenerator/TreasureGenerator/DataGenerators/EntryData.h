@@ -11,6 +11,7 @@ public:
 	EntryData(std::string name);
 	EntryData(std::string name, unsigned int quantity);
 	EntryData(const EntryData& obj);
+	EntryData(EntryData&& obj) noexcept;
 
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
