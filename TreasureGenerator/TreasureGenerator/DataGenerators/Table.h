@@ -12,7 +12,7 @@ public:
 	Table(std::string name, std::vector<TableEntry*> itemList);
 	Table(const Table &obj);
 	~Table();
-	virtual std::string GetResultString(int quantity);
+	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
 	TableEntry* GetRandomItem();
 	void AddEntry(TableEntry* entry);

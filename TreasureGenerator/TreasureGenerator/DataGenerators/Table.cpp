@@ -29,7 +29,7 @@ Table::~Table()
 	delete items;
 }
 
-std::string Table::GetResultString(int quantity)
+std::string Table::GetResultString(unsigned int quantity)
 {
 	this->quantity = quantity;
 	return GetResultString();
