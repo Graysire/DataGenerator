@@ -1,14 +1,13 @@
 #include "ItemConverter.h"
-#include "../../DataGenerators/RNG.h"
 #include <algorithm>
 
-ItemConverter::minShufflePercent = 5;
-ItemConverter::maxShufflePercent = 95;
-ItemConverter::numShuffles = 1;
-ItemConverter::roundUp = true;
-ItemConverter::sortOrder = SortAscending;
-ItemConverter::distribution = DistConcentrated;
-ItemConverter::shuffle = ShuffleDown;
+unsigned short ItemConverter::minShufflePercent = 5;
+unsigned short ItemConverter::maxShufflePercent = 95;
+unsigned short ItemConverter::numShuffles = 1;
+bool ItemConverter::roundUp = true;
+ItemConverterSort ItemConverter::sortOrder = SortAscending;
+ItemConverterDistribution ItemConverter::distribution = DistConcentrated;
+ItemConverterShuffle ItemConverter::shuffle = ShuffleDown;
 
 std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert, std::vector<Item*> itemsToConvertTo)
 {
@@ -17,18 +16,18 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 	switch (ItemConverter::sortOrder)
 	{
 	case SortDescending:
-		std::sort(itemsToConvert.begin(), itemsToConvert.end(), [](Item* i, Item* j) -> bool { return i->GetValue() > j->GetValue() });
-		std::sort(itemsToConvertTo.begin(), itemsToConvertTo.end(), [](Item* i, Item* j) -> bool { return i->GetValue() > j->GetValue() });
+		std::sort(itemsToConvert.begin(), itemsToConvert.end(), [](Item* i, Item* j) -> bool { return i->GetValue() > j->GetValue(); });
+		std::sort(itemsToConvertTo.begin(), itemsToConvertTo.end(), [](Item* i, Item* j) -> bool { return i->GetValue() > j->GetValue(); });
 		break;
 	case SortAscending:
-		std::sort(itemsToConvert.begin(), itemsToConvert.end(), [](Item* i, Item* j) -> bool { return i->GetValue() < j->GetValue() });
-		std::sort(itemsToConvertTo.begin(), itemsToConvertTo.end(), [](Item* i, Item* j) -> bool { return i->GetValue() < j->GetValue() });
+		std::sort(itemsToConvert.begin(), itemsToConvert.end(), [](Item* i, Item* j) -> bool { return i->GetValue() < j->GetValue(); });
+		std::sort(itemsToConvertTo.begin(), itemsToConvertTo.end(), [](Item* i, Item* j) -> bool { return i->GetValue() < j->GetValue(); });
 		break;
 	case SortRandom:
 		std::random_shuffle(itemsToConvert.begin(), itemsToConvert.end());
 		std::random_shuffle(itemsToConvertTo.begin(), itemsToConvertTo.end());
 	case NoSort:
-	case default:
+	default:
 		break;
 	}
 
@@ -77,9 +76,9 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 				// This will significantly improve performance with several large currencies, especially if sorted
 				for (int i = 0; i < itemsToConvertTo.size(); i++)
 				{
-					if (itemsToConvertTo[i]->GetValue <= spareValue)
+					if (itemsToConvertTo[i]->GetValue() <= spareValue)
 					{
-						result[i].SetQuantity(result[i].GetQuantity() + 1));
+						result[i].SetQuantity(result[i].GetQuantity() + 1);
 						//set the remaining spare vlaue to the remainder
 						spareValue -= itemsToConvertTo[i]->GetValue();
 					}
@@ -94,16 +93,16 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 				float middle = (itemsToConvertTo.size() - 1) / 2.0;
 				for (int i = 0; i <= middle; i++)
 				{
-					if (itemsToConvertTo[i]->GetValue <= spareValue)
+					if (itemsToConvertTo[i]->GetValue() <= spareValue)
 					{
-						result[i].SetQuantity(result[i].GetQuantity() + 1));
+						result[i].SetQuantity(result[i].GetQuantity() + 1);
 						spareValue -= itemsToConvertTo[i]->GetValue();
 					}
 
 					int j = itemsToConvertTo.size() - 1 - i;
-					if (itemsToConvertTo[j]->GetValue <= spareValue)
+					if (itemsToConvertTo[j]->GetValue() <= spareValue)
 					{
-						result[j].SetQuantity(result[j].GetQuantity() + 1));
+						result[j].SetQuantity(result[j].GetQuantity() + 1);
 						spareValue -= itemsToConvertTo[j]->GetValue();
 					}
 				}
@@ -115,22 +114,22 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			{
 				// TODO - Compress range of values as spareValue shrinks past them to reduce excess runs of the loop
 				// This will significantly improve performance with several large currencies, especially if sorted
-				int index = rng(0, itemsToConvertTo.size());
-				if (itemsToConvertTo[index]->GetValue <= spareValue)
+				int index = RNG::GetNum(0, itemsToConvertTo.size());
+				if (itemsToConvertTo[index]->GetValue() <= spareValue)
 				{
-					result[index].SetQuantity(result[index].GetQuantity() + 1));
+					result[index].SetQuantity(result[index].GetQuantity() + 1);
 					spareValue -= itemsToConvertTo[index]->GetValue();
 				}
 			}
 			break;
-		case default:
+		default:
 			break;
 		}
 	}
 
 	if (spareValue > 0 && roundUp)
 	{
-		result[minIndex].SetQuantity(result[minIndex].GetQuantity() + 1));
+		result[minIndex].SetQuantity(result[minIndex].GetQuantity() + 1);
 	}
 
 	if (result.size() < 2)
@@ -143,7 +142,7 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 		switch (shuffle)
 		{
 		case ShuffleDown:
-			for (int k = 0 k < result.size() - 1; k++)
+			for (int k = 0; k < result.size() - 1; k++)
 			{
 				ShuffleItemPair(result[k], result[k + 1]);
 			}
@@ -165,7 +164,7 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 				{
 					ShuffleItemPair(result[k], result[k - 1]);
 				}
-				else if (rng(0, 1) == 0)
+				else if (RNG::GetNum(0, 1) == 0)
 				{
 					ShuffleItemPair(result[k], result[k + 1]);
 				}
@@ -176,13 +175,17 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			}
 			break;
 		case ShuffleAlternator:
+		{
 			float middle = (result.size() - 1) / 2.0;
 			for (int k = 0; k < middle; k++)
 			{
 				ShuffleItemPair(result[k], result[k + 1]);
 				ShuffleItemPair(result[result.size() - 1 - k], result[result.size() - 2 - k]);
 			}
+			break;
+		}
 		case ShuffleRandom:
+		{
 			int firstIndex = RNG::GetNum(0, result.size() - 1);
 			int secondIndex = RNG::GetNum(0, result.size() - 1);
 			while (firstIndex == secondIndex)
@@ -192,8 +195,10 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			}
 
 			ShuffleItemPair(result[firstIndex], result[secondIndex]);
+			break; 
+		}
 		case NoShuffle:
-		case default:
+		default:
 			break;
 		};
 	}

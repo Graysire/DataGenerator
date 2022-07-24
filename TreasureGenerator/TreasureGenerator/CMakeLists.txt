@@ -4,6 +4,6 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (TreasureGenerator "TreasureGenerator.cpp" "TreasureGenerator.h" "TableEntry.h" "TableEntry.cpp" "Table.h" "Table.cpp" "RandomNumberGenerator.h" "RandomNumberGenerator.cpp"  "EntryData.h" "EntryData.cpp" "Item.h" "Item.cpp" "VariableTableEntry.h" "NumberGenerationStruct.h" "VariableTableEntry.cpp" "ItemConverter.h")
+add_executable (DataGenerator "DataGenerator.cpp" "DataGenerator.h" "DataGenerators/TableEntry.h" "DataGenerators/TableEntry.cpp" "DataGenerators/Table.h" "DataGenerators/Table.cpp" "DataGenerators/RNG.h" "DataGenerators/RNG.cpp"  "DataGenerators/EntryData.h" "DataGenerators/EntryData.cpp" "RPGData/Item.h" "RPGData/Item.cpp" "DataGenerators/VariableTableEntry.h" "DataGenerators/NumberGenerationStruct.h" "DataGenerators/VariableTableEntry.cpp" "RPGData/DataConverters/ItemConverter.h" "RPGData/DataConverters/ItemConverter.cpp")
 
 # TODO: Add tests and install targets if needed.

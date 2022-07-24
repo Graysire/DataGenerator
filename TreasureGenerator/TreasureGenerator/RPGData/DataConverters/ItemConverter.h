@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../Item.h"
+#include "../../DataGenerators/RNG.h"
 
 enum ItemConverterSort
 {
@@ -13,7 +14,7 @@ enum ItemConverterSort
 	//randomly mix up list
 	SortRandom,
 	//Don't sort the input lists
-	NoSort,
+	NoSort
 };
 
 enum ItemConverterDistribution
@@ -25,7 +26,7 @@ enum ItemConverterDistribution
 	//Convert once to each item in pairs first,last moving to the middle
 	DistAlternating,
 	//Convert at random
-	DistRandom,
+	DistRandom
 };
 
 enum ItemConverterShuffle
@@ -41,7 +42,7 @@ enum ItemConverterShuffle
 	//Shuffle at random
 	ShuffleRandom,
 	//Don't shuffle items
-	NoShuffle,
+	NoShuffle
 };
 
 class ItemConverter {
