@@ -12,6 +12,8 @@ public:
 	Item(const Item& obj);
 	Item(Item&& obj) noexcept;
 
+	Item operator=(const Item& obj);
+
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
 

@@ -5,9 +5,9 @@ unsigned short ItemConverter::minShufflePercent = 5;
 unsigned short ItemConverter::maxShufflePercent = 95;
 unsigned short ItemConverter::numShuffles = 1;
 bool ItemConverter::roundUp = true;
-ItemConverterSort ItemConverter::sortOrder = SortAscending;
-ItemConverterDistribution ItemConverter::distribution = DistConcentrated;
-ItemConverterShuffle ItemConverter::shuffle = ShuffleDown;
+ItemConverterSort ItemConverter::sortOrder = ItemConverterSort::SortDescending;
+ItemConverterDistribution ItemConverter::distribution = ItemConverterDistribution::DistConcentrated;
+ItemConverterShuffle ItemConverter::shuffle = ItemConverterShuffle::ShuffleDown;
 
 std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert, std::vector<Item*> itemsToConvertTo)
 {
@@ -54,6 +54,10 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 	{
 		//Add to the value
 		spareValue += (unsigned long long)item->GetQuantity() * item->GetValue();
+		if (spareValue == 0)
+		{
+			continue;
+		}
 		switch (ItemConverter::distribution)
 		{
 		case DistConcentrated:
@@ -90,7 +94,7 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			{
 				// TODO - Compress range of values as spareValue shrinks past them to reduce excess runs of the loop
 				// This will significantly improve performance with several large currencies, especially if sorted
-				float middle = (itemsToConvertTo.size() - 1) / 2.0;
+				double middle = (itemsToConvertTo.size() - 1) / 2.0;
 				for (int i = 0; i <= middle; i++)
 				{
 					if (itemsToConvertTo[i]->GetValue() <= spareValue)
@@ -109,12 +113,11 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			}
 			break;
 		case DistRandom:
-			RNG rng;
 			while (spareValue >= minValue)
 			{
 				// TODO - Compress range of values as spareValue shrinks past them to reduce excess runs of the loop
 				// This will significantly improve performance with several large currencies, especially if sorted
-				int index = RNG::GetNum(0, itemsToConvertTo.size());
+				long long index = RNG::GetNum(0, itemsToConvertTo.size() - 1);
 				if (itemsToConvertTo[index]->GetValue() <= spareValue)
 				{
 					result[index].SetQuantity(result[index].GetQuantity() + 1);
@@ -148,7 +151,7 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 			}
 			break;
 		case ShuffleUp:
-			for (int k = result.size() - 1; k > 0 ; k++)
+			for (unsigned long long k = result.size() - 1; k > 0; k--)
 			{
 				ShuffleItemPair(result[k], result[k - 1]);
 			}
@@ -188,7 +191,7 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 		{
 			int firstIndex = RNG::GetNum(0, result.size() - 1);
 			int secondIndex = RNG::GetNum(0, result.size() - 1);
-			while (firstIndex == secondIndex)
+			while (firstIndex == secondIndex || result[firstIndex].GetQuantity() == 0)
 			{
 				firstIndex = RNG::GetNum(0, result.size() - 1);
 				secondIndex = RNG::GetNum(0, result.size() - 1);
@@ -203,7 +206,16 @@ std::vector<Item> ItemConverter::ConvertItems(std::vector<Item*> itemsToConvert,
 		};
 	}
 
-	return result;
+	std::vector<Item> finalResult;
+	for (int i = 0; i < result.size(); i++)
+	{
+		if (result[i].GetQuantity() != 0)
+		{
+			finalResult.push_back(result[i]);
+		}
+	}
+
+	return finalResult;
 }
 
 void ItemConverter::ShuffleItemPair(Item& itemToShuffle, Item& itemToShuffleTo)
@@ -213,12 +225,13 @@ void ItemConverter::ShuffleItemPair(Item& itemToShuffle, Item& itemToShuffleTo)
 		return;
 	}
 
-	unsigned long valueToConvert = itemToShuffle.GetQuantity() * itemToShuffle.GetValue() * (RNG::GetNum(minShufflePercent, maxShufflePercent) / 100.0);
+	unsigned long valueToConvert = itemToShuffle.GetQuantity() * itemToShuffle.GetValue() * (RNG::GetNum(minShufflePercent * 1000, maxShufflePercent * 1000) / 100000.0);
 	unsigned int quantityToConvert = valueToConvert / itemToShuffle.GetValue();
-	if (valueToConvert % itemToShuffle.GetValue() > itemToShuffle.GetValue() / 2)
+	if (roundUp && valueToConvert % itemToShuffle.GetValue() >= itemToShuffle.GetValue() / 2)
 	{
 		quantityToConvert++;
 	}
+	valueToConvert = quantityToConvert * itemToShuffle.GetValue();
 
 	if (valueToConvert % itemToShuffleTo.GetValue() >= itemToShuffle.GetValue())
 	{
@@ -234,7 +247,7 @@ void ItemConverter::ShuffleItemPair(Item& itemToShuffle, Item& itemToShuffleTo)
 
 	unsigned int quantityToAdd = (quantityToConvert * itemToShuffle.GetValue()) / itemToShuffleTo.GetValue();
 
-	if (valueToConvert - quantityToAdd * itemToShuffleTo.GetValue() > itemToShuffleTo.GetValue() / 2)
+	if (roundUp && valueToConvert - quantityToAdd * itemToShuffleTo.GetValue() >= itemToShuffleTo.GetValue() / 2.0)
 	{
 		quantityToAdd++;
 	}

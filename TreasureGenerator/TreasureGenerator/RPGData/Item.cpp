@@ -30,6 +30,11 @@ Item::Item(Item&& obj) noexcept : EntryData(std::move(obj)), value(obj.value), w
 	obj.weight = 0;
 }
 
+Item Item::operator=(const Item& obj)
+{
+	return Item(obj);
+}
+
 std::string Item::GetResultString(unsigned int quantity)
 {
 	return EntryData::GetResultString(quantity);
