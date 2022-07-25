@@ -14,6 +14,9 @@ public:
 	~Table();
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
+	virtual void GetResult(unsigned int quantity, std::vector<EntryData*>& resultData);
+	virtual void GetResult(std::vector<EntryData*>& resultData);
+	virtual std::vector<EntryData*> GetResultVector(unsigned int numRolls);
 	TableEntry* GetRandomItem();
 	void AddEntry(TableEntry* entry);
 protected:

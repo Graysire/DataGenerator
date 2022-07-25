@@ -15,7 +15,7 @@ public:
 	VariableTableEntry(VariableTableEntry&& obj) noexcept;
 	virtual ~VariableTableEntry();
 
-	virtual std::string GetResultString();
+	virtual void GetResult(std::vector<EntryData*>& resultData);
 
 	Dice GetDice();
 	void SetDice(Dice dice);

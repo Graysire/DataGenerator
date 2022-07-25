@@ -2,6 +2,7 @@
 #define TableEntry_H
 
 #include "EntryData.h"
+#include <vector>
 
 class TableEntry
 {
@@ -12,7 +13,7 @@ public:
 	TableEntry(TableEntry&& obj) noexcept;
 	virtual ~TableEntry();
 
-	virtual std::string GetResultString();
+	virtual void GetResult(std::vector<EntryData*>& resultData);
 
 	int GetFrequency();
 	void SetFrequency(int freq);

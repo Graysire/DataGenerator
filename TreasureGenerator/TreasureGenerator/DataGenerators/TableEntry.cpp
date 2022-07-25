@@ -23,9 +23,9 @@ TableEntry::~TableEntry()
 	delete data;
 }
 
-std::string TableEntry::GetResultString()
+void TableEntry::GetResult(std::vector<EntryData*>& resultData)
 {
-	return data->GetResultString();
+	data->GetResult(1, resultData);
 }
 
 int TableEntry::GetFrequency()

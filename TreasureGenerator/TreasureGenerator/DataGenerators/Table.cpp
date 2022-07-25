@@ -26,6 +26,10 @@ Table::Table(const Table& table)
 
 Table::~Table()
 {
+	for each (TableEntry * entry in *items)
+	{
+		delete entry;
+	}
 	delete items;
 }
 
@@ -38,16 +42,44 @@ std::string Table::GetResultString(unsigned int quantity)
 std::string Table::GetResultString()
 {
 	std::ostringstream result;
+	std::vector<EntryData*> dataList = GetResultVector(quantity);
+	for (int i = 0; i < dataList.size(); i++)
+	{
+		result << dataList[i]->GetResultString() << std::endl;
+	}
+
+	for each (EntryData* data in dataList)
+	{
+		delete data;
+	}
+
+	return result.str();
+}
+
+void Table::GetResult(unsigned int quantity, std::vector<EntryData*>& resultData)
+{
+	this->quantity = quantity;
+	GetResult(resultData);
+}
+
+void Table::GetResult(std::vector<EntryData*>& resultData)
+{
 	for (int i = 0; i < quantity; i++)
 	{
 		TableEntry* entry = GetRandomItem();
 		if (entry == nullptr)
 		{
-			return "";
+			return;
 		}
-		result << entry->GetResultString() << std::endl;
+		entry->GetResult(resultData);
 	}
-	return result.str();
+}
+
+std::vector<EntryData*> Table::GetResultVector(unsigned int numRolls = 1)
+{
+	std::vector<EntryData*> results;
+	GetResult(numRolls, results);
+	return results;
 }
 
 void Table::AddEntry(TableEntry* item)

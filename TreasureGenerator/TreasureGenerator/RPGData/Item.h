@@ -16,6 +16,8 @@ public:
 
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
+	virtual void GetResult(unsigned int quantity, std::vector<EntryData*>& resultData);
+	virtual void GetResult(std::vector<EntryData*>& resultData);
 
 	unsigned long GetValue();
 	void SetValue(unsigned long value);

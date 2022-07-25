@@ -54,6 +54,17 @@ std::string Item::GetResultString()
 	return result.str();
 }
 
+void Item::GetResult(unsigned int quantity, std::vector<EntryData*>& resultData)
+{
+	this->quantity = quantity;
+	GetResult(resultData);
+}
+void Item::GetResult(std::vector<EntryData*>& resultData)
+{
+	resultData.push_back(new Item(*this));
+}
+
+
 unsigned long Item::GetValue()
 {
 	return value;

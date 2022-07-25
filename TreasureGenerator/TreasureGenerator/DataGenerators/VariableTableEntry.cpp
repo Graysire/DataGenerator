@@ -19,7 +19,7 @@ VariableTableEntry::~VariableTableEntry()
 {
 }
 
-std::string VariableTableEntry::GetResultString()
+void VariableTableEntry::GetResult(std::vector<EntryData*>& resultList)
 {
 	unsigned int sum = dice.baseNum;
 	for (int i = 0; i < dice.numDice; i++)
@@ -28,7 +28,7 @@ std::string VariableTableEntry::GetResultString()
 	}
 	sum *= dice.multiplier;
 
-	return data->GetResultString(sum);
+	data->GetResult(sum, resultList);
 }
 
 Dice VariableTableEntry::GetDice()

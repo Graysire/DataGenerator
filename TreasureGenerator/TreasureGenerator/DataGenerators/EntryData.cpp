@@ -41,6 +41,17 @@ std::string EntryData::GetResultString()
 	return result.str();
 }
 
+void EntryData::GetResult(unsigned int quantity, std::vector<EntryData*>& resultData)
+{
+	this->quantity = quantity;
+	GetResult(resultData);
+}
+
+void EntryData::GetResult(std::vector<EntryData*>& resultData)
+{
+	resultData.push_back(new EntryData(*this));
+}
+
 std::string EntryData::GetName()
 {
 	return name;

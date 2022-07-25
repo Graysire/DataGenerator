@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 class EntryData
 {
@@ -15,6 +16,8 @@ public:
 
 	virtual std::string GetResultString(unsigned int quantity);
 	virtual std::string GetResultString();
+	virtual void GetResult(unsigned int quantity, std::vector<EntryData*>& resultData);
+	virtual void GetResult(std::vector<EntryData*>& resultData);
 
 	std::string GetName();
 	void SetName(std::string name);
